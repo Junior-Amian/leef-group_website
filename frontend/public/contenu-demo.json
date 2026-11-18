@@ -1,0 +1,264 @@
+{
+  "parametres": {
+    "seo.titre": "LEEF GROUP | Connecter, structurer, performer",
+    "seo.description": "LEEF GROUP, groupe multisectoriel basé à Abidjan : transport et logistique, immobilier, médias, informatique, événementiel et engagement social.",
+    "hero.description": "Un groupe multisectoriel au service des entreprises, des institutions et des particuliers, en Côte d’Ivoire et à l’international.",
+    "groupe.titre": "Un groupe, plusieurs métiers, une même exigence.",
+    "groupe.texte": "LEEF GROUP conçoit et met en œuvre des solutions concrètes face aux enjeux économiques et sociétaux. Nous ne nous limitons pas à exécuter des services : nous facilitons les échanges, fluidifions les opérations et créons des passerelles entre les opportunités.",
+    "groupe.vision": "Devenir un groupe structuré et reconnu pour la qualité de ses services, sa capacité d’adaptation et son engagement dans des solutions durables.",
+    "valeurs.connecter": "Relier chaque besoin aux bonnes expertises du groupe.",
+    "valeurs.structurer": "Organiser chaque projet avec rigueur, de l’étude à l’exécution.",
+    "valeurs.performer": "Viser une performance durable, transparente et mesurable.",
+    "poles.titre": "Six pôles, un même cap.",
+    "poles.texte": "Ouvrez un pôle pour découvrir ses prestations et le contacter directement.",
+    "partenariat.titre": "Collaborer avec LEEF GROUP",
+    "partenariat.texte": "Nous sommes ouverts aux collaborations stratégiques qui renforcent nos pôles. Des relations durables, fondées sur la confiance, la transparence et la performance.",
+    "partenariat.pistes.entreprise": "Synergies commerciales entre vos activités et nos six pôles\nPrestations croisées et sous-traitance\nProjets communs en Côte d’Ivoire",
+    "partenariat.pistes.institution": "Projets d’intérêt général et initiatives sociales\nÉvénements institutionnels et leur couverture média\nActions de sensibilisation au plus près du terrain",
+    "partenariat.pistes.investisseur": "Développement de pôles à fort potentiel\nProjets de promotion immobilière\nMobilité et parc de véhicules",
+    "partenariat.pistes.technique": "Constructeurs et fournisseurs de véhicules et d’équipements\nExpertises complémentaires à nos pôles\nPartenaires internationaux, notamment en Chine et en Europe",
+    "contact.texte": "Choisissez le canal qui vous convient. Nous répondons depuis Abidjan.",
+    "contact.telephone": "+225 05 64 90 80 80",
+    "contact.whatsapp": "+225 07 88 36 84 22",
+    "contact.email": "direction.generale@leef-group.fr",
+    "contact.adresse": "Abidjan, Cocody Angré",
+    "contact.adresse_complement": "27 BPM 258 Abidjan 27, Côte d’Ivoire",
+    "contact.carte_latitude": "5.3990",
+    "contact.carte_longitude": "-3.9850",
+    "reseaux.linkedin": "",
+    "reseaux.facebook": "",
+    "reseaux.instagram": "",
+    "pied.accroche": "Des solutions intégrées, une vision durable."
+  },
+  "poles": [
+    {
+      "id": 1,
+      "slug": "transport",
+      "nom": "Transport & logistique",
+      "resume": "Location, vente, import, leasing, VTC et transport de marchandises.",
+      "accroche": "Mobilité et transport de biens, de la location à l’importation depuis la Chine et l’Europe jusqu’au port d’Abidjan.",
+      "introduction": "Gestion et optimisation des solutions de mobilité et de transport de biens, avec un haut niveau de rigueur, pour les particuliers, les entreprises et les institutions.",
+      "engagement": "Offrir des solutions de transport fiables, structurées et adaptées aux exigences du marché.",
+      "image": "",
+      "imageAlt": "",
+      "actif": true,
+      "prestations": [
+        {
+          "titre": "Location et vente de véhicules",
+          "libelleCourt": "Location et vente",
+          "description": "Formules souples pour les besoins personnels et professionnels."
+        },
+        {
+          "titre": "Importation de véhicules et marchandises",
+          "libelleCourt": "Importation",
+          "description": "Via nos partenaires en Chine et en Europe, jusqu’au port d’Abidjan et aux formalités."
+        },
+        {
+          "titre": "Solutions d’acquisition flexibles",
+          "libelleCourt": "Acquisition flexible",
+          "description": "Apports partiels et solutions personnalisées."
+        },
+        {
+          "titre": "Leasing et location-vente",
+          "libelleCourt": "Leasing",
+          "description": "Location avec option d’achat."
+        },
+        {
+          "titre": "VTC particuliers et entreprises",
+          "libelleCourt": "VTC",
+          "description": "Transport avec chauffeur, urbain et professionnel."
+        },
+        {
+          "titre": "Véhicules pour structures d’accueil",
+          "libelleCourt": "Structures d’accueil",
+          "description": "Hôtels, résidences et zones touristiques balnéaires."
+        },
+        {
+          "titre": "Transport de marchandises",
+          "libelleCourt": "Marchandises",
+          "description": "Acheminement sécurisé de biens."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "slug": "immobilier",
+      "nom": "Immobilier",
+      "resume": "Vente, promotion et gestion de biens résidentiels et commerciaux.",
+      "accroche": "Conception, réalisation et valorisation de projets immobiliers, des plans 3D aux finitions.",
+      "introduction": "Conception, réalisation et valorisation de projets immobiliers, intégrant conception, exécution et finition, dans le respect des standards de fiabilité et de durabilité.",
+      "engagement": "Un accompagnement professionnel à chaque étape du projet, exécuté avec rigueur.",
+      "image": "",
+      "imageAlt": "",
+      "actif": true,
+      "prestations": [
+        {
+          "titre": "Vente et acquisition de biens",
+          "libelleCourt": "Vente et acquisition",
+          "description": "Résidentiel et commercial, avec un processus sécurisé."
+        },
+        {
+          "titre": "Développement et promotion",
+          "libelleCourt": "Promotion immobilière",
+          "description": "Plans 3D, gros œuvre et finitions par des équipes qualifiées."
+        },
+        {
+          "titre": "Gestion et valorisation",
+          "libelleCourt": "Gestion et valorisation",
+          "description": "Entretien, mise en valeur et exploitation optimale des biens."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "slug": "medias",
+      "nom": "Médias",
+      "resume": "Production audiovisuelle, captation et contenus digitaux.",
+      "accroche": "Production, captation et valorisation de contenus audiovisuels de qualité professionnelle.",
+      "introduction": "Production, captation et valorisation de contenus audiovisuels pour mettre en lumière vos activités, vos événements et vos messages.",
+      "engagement": "Des contenus professionnels, accessibles et adaptés, avec qualité, cohérence et impact visuel.",
+      "image": "",
+      "imageAlt": "",
+      "actif": true,
+      "prestations": [
+        {
+          "titre": "Production audiovisuelle",
+          "libelleCourt": "Production audiovisuelle",
+          "description": "Vidéos institutionnelles, commerciales ou personnelles."
+        },
+        {
+          "titre": "Captation photo et vidéo",
+          "libelleCourt": "Captation d’événements",
+          "description": "Tous types d’événements, du privé à l’institutionnel."
+        },
+        {
+          "titre": "Contenus digitaux",
+          "libelleCourt": "Contenus digitaux",
+          "description": "Formats adaptés aux plateformes numériques."
+        },
+        {
+          "titre": "Création de contenus visuels",
+          "libelleCourt": "Contenus visuels",
+          "description": "Supports pour valoriser projets et événements."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "slug": "informatique",
+      "nom": "Informatique & sécurité",
+      "resume": "Sites, applications, maintenance, vidéosurveillance et réseaux.",
+      "accroche": "Transformation digitale, équipements et sécurité électronique pour entreprises, institutions et particuliers.",
+      "introduction": "Des solutions technologiques modernes et fiables pour accompagner la transformation digitale des entreprises, institutions et particuliers.",
+      "engagement": "Des solutions évolutives et performantes, combinant innovation, sécurité et efficacité.",
+      "image": "",
+      "imageAlt": "",
+      "actif": true,
+      "prestations": [
+        {
+          "titre": "Développement de sites web",
+          "libelleCourt": "Sites web",
+          "description": "Sites professionnels et modernes."
+        },
+        {
+          "titre": "Développement d’applications",
+          "libelleCourt": "Applications",
+          "description": "Solutions digitales sur mesure."
+        },
+        {
+          "titre": "Maintenance et assistance",
+          "libelleCourt": "Maintenance",
+          "description": "Suivi technique de vos systèmes."
+        },
+        {
+          "titre": "Solutions digitales",
+          "libelleCourt": "Solutions digitales",
+          "description": "Outils de gestion et de communication."
+        },
+        {
+          "titre": "Équipements et gadgets",
+          "libelleCourt": "Équipements",
+          "description": "Matériel informatique et accessoires."
+        },
+        {
+          "titre": "Systèmes de sécurité",
+          "libelleCourt": "Vidéosurveillance",
+          "description": "Vidéosurveillance pour résidences et bureaux."
+        },
+        {
+          "titre": "Réseau et connectivité",
+          "libelleCourt": "Réseau",
+          "description": "Installations et amplificateurs de signal."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "slug": "evenementiel",
+      "nom": "Événementiel",
+      "resume": "Organisation, lancements, séminaires et coordination technique.",
+      "accroche": "Des événements de toutes tailles, conçus et coordonnés avec rigueur et sens du détail.",
+      "introduction": "Conception, organisation et coordination d’événements de toutes tailles, avec rigueur organisationnelle et sens du détail.",
+      "engagement": "Des événements structurés et maîtrisés, avec fluidité, qualité et professionnalisme.",
+      "image": "",
+      "imageAlt": "",
+      "actif": true,
+      "prestations": [
+        {
+          "titre": "Organisation d’événements",
+          "libelleCourt": "Organisation",
+          "description": "Privés, professionnels, culturels et institutionnels."
+        },
+        {
+          "titre": "Lancements et activations",
+          "libelleCourt": "Lancements et activations",
+          "description": "Produits, services ou projets."
+        },
+        {
+          "titre": "Événements d’entreprise",
+          "libelleCourt": "Événements d’entreprise",
+          "description": "Séminaires et rencontres professionnelles."
+        },
+        {
+          "titre": "Coordination logistique et technique",
+          "libelleCourt": "Coordination technique",
+          "description": "Prise en charge opérationnelle complète."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "slug": "social",
+      "nom": "Engagement social",
+      "resume": "Actions solidaires, projets communautaires et sensibilisation.",
+      "accroche": "La dimension humaine du groupe : des actions utiles, au plus près des communautés.",
+      "introduction": "La dimension humaine et solidaire du groupe : agir concrètement auprès des communautés, là où les besoins sont les plus importants.",
+      "engagement": "Mettre l’humain au cœur de nos actions et contribuer durablement au bien-être des communautés.",
+      "image": "",
+      "imageAlt": "",
+      "actif": true,
+      "prestations": [
+        {
+          "titre": "Actions sociales et humanitaires",
+          "libelleCourt": "Actions humanitaires",
+          "description": "Solidarité envers les personnes vulnérables."
+        },
+        {
+          "titre": "Projets communautaires",
+          "libelleCourt": "Projets communautaires",
+          "description": "Développement local et cohésion sociale."
+        },
+        {
+          "titre": "Sensibilisation et accompagnement",
+          "libelleCourt": "Sensibilisation",
+          "description": "Actions ancrées dans les réalités du terrain."
+        },
+        {
+          "titre": "Engagements solidaires",
+          "libelleCourt": "Engagements solidaires",
+          "description": "Projets à impact avec des acteurs locaux."
+        }
+      ]
+    }
+  ]
+}

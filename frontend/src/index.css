@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Styles hors Tailwind : animations, états pilotés par attributs ARIA et finitions du navigateur.
+ * Repris de la version validée (version-retenue/index.html).
+ */
+
+:root { --sortie: cubic-bezier(.23, 1, .32, 1); }
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    scrollbar-gutter: stable;
+    scrollbar-color: rgb(0 19 78 / .3) transparent;
+    caret-color: #E31F2C;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; -webkit-tap-highlight-color: transparent; }
+  ::selection { background: #E31F2C; color: #fff; }
+  a { text-underline-offset: .22em; }
+  :focus-visible { outline: 3px solid #00134E; outline-offset: 3px; }
+  .sur-sombre :focus-visible { outline-color: #fff; }
+}
+
+@layer utilities {
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+/* ---------- Apparition au défilement ---------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .8s cubic-bezier(.16, 1, .3, 1), transform .8s cubic-bezier(.16, 1, .3, 1);
+  transition-delay: var(--d, 0ms);
+}
+[data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* ---------- Entrée du hero : le slogan monte mot par mot ---------- */
+@keyframes leef-in { from { opacity: 0; transform: translateY(14px); } }
+.hero-in { animation: leef-in .9s cubic-bezier(.16, 1, .3, 1) both; animation-delay: var(--d, 0ms); }
+@keyframes monte { from { transform: translateY(105%); } }
+.mot { display: block; overflow: hidden; padding-bottom: .04em; }
+.mot > span { display: inline-block; animation: monte .95s var(--sortie) both; animation-delay: var(--d, 0ms); }
+
+/* ---------- Barre de navigation flottante ---------- */
+.entete {
+  padding-top: max(.75rem, env(safe-area-inset-top));
+  padding-left: max(.75rem, env(safe-area-inset-left));
+  padding-right: max(.75rem, env(safe-area-inset-right));
+}
+@media (min-width: 640px) { .entete { padding-top: max(1rem, env(safe-area-inset-top)); } }
+.ilot { box-shadow: 0 1px 1px rgb(0 19 78 / .04), 0 18px 40px -18px rgb(70 0 8 / .45); transition: box-shadow .3s ease; }
+.entete[data-defile="true"] .ilot { box-shadow: 0 1px 1px rgb(0 19 78 / .05), 0 18px 40px -20px rgb(0 19 78 / .32); }
+.lien-nav[aria-current="true"] { background: #F2F2F4; color: #00134E; }
+.trait { transform: translateX(-50%); transition: transform .3s cubic-bezier(.32, .72, 0, 1); }
+[aria-expanded="true"] > .trait-1 { transform: translate(-50%, 3.5px) rotate(45deg); }
+[aria-expanded="true"] > .trait-2 { transform: translate(-50%, -3.5px) rotate(-45deg); }
+@keyframes menu-in { from { opacity: 0; transform: translateY(-6px) scale(.98); } }
+.menu-mobile { animation: menu-in .25s var(--sortie); transform-origin: top right; }
+
+/* ---------- Schéma des pôles (hero) ---------- */
+.lien-hub { stroke: rgb(255 255 255 / .5); stroke-width: 1.5; stroke-dasharray: 3 6; }
+.lien-actif { stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 190; stroke-dashoffset: 190; transition: stroke-dashoffset .45s var(--sortie); }
+.lien-actif[data-trace="true"] { stroke-dashoffset: 0; }
+.noeud-rond { box-shadow: 0 14px 28px -14px rgb(70 0 8 / .6); transition: transform .16s ease-out, box-shadow .25s ease; }
+.noeud:active .noeud-rond { transform: scale(.96); }
+.noeud[aria-pressed="true"] .noeud-rond { box-shadow: 0 0 0 3px #E31F2C, 0 0 0 5px #fff, 0 16px 30px -14px rgb(70 0 8 / .6); }
+@media (hover: hover) and (pointer: fine) { .noeud:hover .noeud-rond { transform: translateY(-2px); } }
+@keyframes apparait { from { opacity: 0; transform: translate(-50%, -50%) scale(.9); } }
+@keyframes trace { from { opacity: 0; } }
+.hub-in .noeud { animation: apparait .5s var(--sortie) both; animation-delay: calc(450ms + var(--i) * 60ms); }
+.hub-in .lien-hub { animation: trace .6s ease-out both; animation-delay: calc(400ms + var(--i) * 60ms); }
+.hub-info > * { transition: opacity .2s ease, filter .2s ease; }
+.hub-info[data-change="true"] > * { opacity: 0; filter: blur(2px); }
+
+/* ---------- Pôles : cartes qui s'empilent au défilement ---------- */
+.carte-pole { position: sticky; top: calc(5.75rem + var(--i) * .75rem); }
+@media (min-width: 1024px) { .carte-pole { top: calc(6.75rem + var(--i) * 1.1rem); } }
+/* La carte recouverte recule : réduction et voile proportionnels à --p (0 à 1) */
+.carte-pole > article { transform: scale(calc(1 - var(--p, 0) * .05)); transform-origin: 50% 0; will-change: transform; }
+.carte-pole .voile-carte { opacity: calc(var(--p, 0) * .2); }
+
+/* ---------- Fiche d'un pôle : fenêtre centrée (ordinateur), panneau du bas (mobile) ---------- */
+.fiche { width: min(100% - 2rem, 52rem); max-height: calc(100dvh - 3rem); padding: 0; border: 0; border-radius: 28px; overflow: hidden; color: #00134E; background: #fff; box-shadow: 0 40px 80px -30px rgb(0 19 78 / .5); }
+.fiche[open] { display: flex; flex-direction: column; animation: fiche-in .3s var(--sortie); }
+.fiche::backdrop { background: rgb(0 19 78 / .45); backdrop-filter: blur(4px); }
+.fiche[open]::backdrop { animation: voile-in .3s ease-out; }
+.fiche-defil { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgb(0 19 78 / .25) transparent; }
+.fiche-pied { transition: box-shadow .2s ease; }
+.fiche-pied[data-ombre="true"] { box-shadow: 0 -14px 28px -18px rgb(0 19 78 / .35); }
+@keyframes fiche-in { from { opacity: 0; transform: translateY(16px) scale(.98); } }
+@keyframes voile-in { from { opacity: 0; } }
+@keyframes fiche-out { to { opacity: 0; transform: translateY(12px) scale(.98); } }
+@keyframes voile-out { to { opacity: 0; } }
+.fiche[data-ferme="true"] { animation: fiche-out .18s ease forwards; }
+.fiche[data-ferme="true"]::backdrop { animation: voile-out .18s ease forwards; }
+@media (max-width: 639px) {
+  .fiche { width: 100%; max-width: 100%; margin: auto 0 0; border-radius: 28px 28px 0 0; max-height: 92dvh; }
+  .fiche[open] { animation: feuille-in .34s var(--sortie); }
+  .fiche[data-ferme="true"] { animation: feuille-out .22s ease forwards; }
+  .fiche-pied { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
+  .fiche-tete { touch-action: pan-x; cursor: grab; }
+  @keyframes feuille-in { from { transform: translateY(100%); } }
+  @keyframes feuille-out { to { transform: translateY(100%); } }
+}
+
+/* ---------- Partenariat ---------- */
+.segment { transition: background-color .2s ease, color .2s ease, transform .16s ease-out; }
+.segment:active { transform: scale(.97); }
+.segment[aria-checked="true"] { background: #fff; color: #E31F2C; }
+
+/* Champs soulignés du site public */
+.champ { border: 0; border-bottom: 2px solid #E3E4E9; border-radius: 0; background: transparent; padding-left: 0; padding-right: 0; transition: border-color .2s ease; }
+.champ:focus { outline: none; border-bottom-color: #00134E; box-shadow: 0 1px 0 #00134E; }
+.champ[aria-invalid="true"] { border-bottom-color: #C8000F; box-shadow: 0 1px 0 #C8000F; }
+
+/* ---------- Carte : sur écran tactile, pas de capture du défilement ---------- */
+@media (pointer: coarse) {
+  .carte-wrap iframe { pointer-events: none; }
+  .carte-wrap .itineraire { display: flex; }
+}
+
+/* ---------- Barre d'action fixe (mobile) ---------- */
+.barre-action { bottom: calc(.75rem + env(safe-area-inset-bottom)); transform: translateY(calc(100% + 2rem)); transition: transform .35s var(--sortie); }
+.barre-action[data-visible="true"] { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .hero-in, .mot > span, .hub-in .noeud, .hub-in .lien-hub, .fiche[open], .menu-mobile { animation: none; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

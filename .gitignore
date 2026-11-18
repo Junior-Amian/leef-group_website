@@ -1,0 +1,19 @@
+# Dépendances et builds
+node_modules/
+frontend/dist-pages/
+backend/public/app/
+
+# Configuration locale (accès à la base)
+backend/config/config.php
+
+# Fichiers produits à l'exécution
+backend/public/uploads/*
+!backend/public/uploads/.htaccess
+backend/storage/logs/*
+!backend/storage/logs/.gitkeep
+
+# Système et éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
