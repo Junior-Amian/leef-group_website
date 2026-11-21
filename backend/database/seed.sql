@@ -1,6 +1,6 @@
 -- LEEF GROUP : contenus initiaux (textes de la version validée, issus du cahier des charges).
 -- À exécuter après schema.sql :  mysql -u <utilisateur> -p <base> < seed.sql
--- Aucune photo au départ : le site affiche un placeholder par pôle jusqu'à l'ajout des vraies photos depuis le panel.
+-- Photos des pôles : images d'illustration (Unsplash, Pexels) à remplacer par les vraies photos de LEEF GROUP depuis le panel.
 
 SET NAMES utf8mb4;
 
@@ -42,37 +42,37 @@ INSERT INTO poles (id, slug, nom, resume, accroche, introduction, engagement, im
  'Mobilité et transport de biens, de la location à l’importation depuis la Chine et l’Europe jusqu’au port d’Abidjan.',
  'Gestion et optimisation des solutions de mobilité et de transport de biens, avec un haut niveau de rigueur, pour les particuliers, les entreprises et les institutions.',
  'Offrir des solutions de transport fiables, structurées et adaptées aux exigences du marché.',
- '', '', 1),
+ 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&q=75&auto=format&fit=crop', 'Illustration du pôle Transport & logistique', 1),
 (2, 'immobilier', 'Immobilier',
  'Vente, promotion et gestion de biens résidentiels et commerciaux.',
  'Conception, réalisation et valorisation de projets immobiliers, des plans 3D aux finitions.',
  'Conception, réalisation et valorisation de projets immobiliers, intégrant conception, exécution et finition, dans le respect des standards de fiabilité et de durabilité.',
  'Un accompagnement professionnel à chaque étape du projet, exécuté avec rigueur.',
- '', '', 2),
+ 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=75&auto=format&fit=crop', 'Illustration du pôle Immobilier', 2),
 (3, 'medias', 'Médias',
  'Production audiovisuelle, captation et contenus digitaux.',
  'Production, captation et valorisation de contenus audiovisuels de qualité professionnelle.',
  'Production, captation et valorisation de contenus audiovisuels pour mettre en lumière vos activités, vos événements et vos messages.',
  'Des contenus professionnels, accessibles et adaptés, avec qualité, cohérence et impact visuel.',
- '', '', 3),
+ 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=1200&q=75&auto=format&fit=crop', 'Illustration du pôle Médias', 3),
 (4, 'informatique', 'Informatique & sécurité',
  'Sites, applications, maintenance, vidéosurveillance et réseaux.',
  'Transformation digitale, équipements et sécurité électronique pour entreprises, institutions et particuliers.',
  'Des solutions technologiques modernes et fiables pour accompagner la transformation digitale des entreprises, institutions et particuliers.',
  'Des solutions évolutives et performantes, combinant innovation, sécurité et efficacité.',
- '', '', 4),
+ 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=75&auto=format&fit=crop', 'Illustration du pôle Informatique & sécurité', 4),
 (5, 'evenementiel', 'Événementiel',
  'Organisation, lancements, séminaires et coordination technique.',
  'Des événements de toutes tailles, conçus et coordonnés avec rigueur et sens du détail.',
  'Conception, organisation et coordination d’événements de toutes tailles, avec rigueur organisationnelle et sens du détail.',
  'Des événements structurés et maîtrisés, avec fluidité, qualité et professionnalisme.',
- '', '', 5),
+ 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&q=75&auto=format&fit=crop', 'Illustration du pôle Événementiel', 5),
 (6, 'social', 'Engagement social',
  'Actions solidaires, projets communautaires et sensibilisation.',
  'La dimension humaine du groupe : des actions utiles, au plus près des communautés.',
  'La dimension humaine et solidaire du groupe : agir concrètement auprès des communautés, là où les besoins sont les plus importants.',
  'Mettre l’humain au cœur de nos actions et contribuer durablement au bien-être des communautés.',
- '', '', 6);
+ 'https://images.pexels.com/photos/6646882/pexels-photo-6646882.jpeg?auto=compress&cs=tinysrgb&w=1200', 'Bénévoles se remettant un carton de dons', 6);
 
 INSERT INTO prestations (pole_id, titre, libelle_court, description, ordre) VALUES
 (1, 'Location et vente de véhicules', 'Location et vente', 'Formules souples pour les besoins personnels et professionnels.', 1),
