@@ -12,6 +12,7 @@ final class Response
         header('Content-Type: application/json; charset=utf-8');
         header('Cache-Control: no-store');
         header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'"); // une réponse JSON ne charge rien
+        header('X-Robots-Tag: noindex'); // les réponses de l'API ne doivent jamais apparaître dans les résultats
         echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         exit;
     }
@@ -36,6 +37,16 @@ final class Response
         http_response_code($status);
         header('Content-Type: text/html; charset=utf-8');
         echo $html;
+        exit;
+    }
+
+    /** Fichier texte généré (robots.txt, sitemap.xml). */
+    public static function text(string $body, string $contentType, int $status = 200): never
+    {
+        http_response_code($status);
+        header("Content-Type: {$contentType}; charset=utf-8");
+        header('Cache-Control: public, max-age=3600');
+        echo $body;
         exit;
     }
 

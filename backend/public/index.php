@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 /**
  * Contrôleur frontal unique : toutes les requêtes passent par ici (voir .htaccess).
- *   /api/...  → routeur et contrôleurs de l'API (réponses JSON)
- *   le reste  → application React (site public et panel /admin)
+ *   /api/...                   → routeur et contrôleurs de l'API (réponses JSON)
+ *   /robots.txt, /sitemap.xml  → fichiers pour les moteurs de recherche
+ *   le reste                   → application React (site public et panel /admin)
  */
 
 use App\Controllers\AppController;
+use App\Controllers\SeoController;
 use App\Core\HttpException;
 use App\Core\Request;
 use App\Core\Response;
@@ -18,6 +20,12 @@ require dirname(__DIR__) . '/app/bootstrap.php';
 Response::securityHeaders();
 $request = Request::fromGlobals();
 
+if ($request->path === '/robots.txt') {
+    (new SeoController($request))->robots();
+}
+if ($request->path === '/sitemap.xml') {
+    (new SeoController($request))->sitemap();
+}
 if (!str_starts_with($request->path, '/api')) {
     (new AppController($request))->page();
 }

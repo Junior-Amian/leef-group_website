@@ -13,6 +13,10 @@ return [
     // Site servi en HTTPS (production) : cookie de session toujours « Secure » et en-tête HSTS.
     // Laisser à true même derrière un proxy ou Cloudflare ; false seulement en local sans certificat.
     'https' => true,
+    // Adresse publique du site, sans « / » final. Sert au référencement : adresse canonique des pages,
+    // image de partage sur les réseaux sociaux, données structurées, robots.txt et sitemap.xml.
+    // Valeur d'exemple : à remplacer par le domaine définitif avant la mise en ligne.
+    'site_url' => 'https://leef-group.com',
     // Expéditeur des notifications (adresse du domaine du site, sinon les e-mails risquent le spam).
     'mail_from' => 'no-reply@leef-group.com',
 ];

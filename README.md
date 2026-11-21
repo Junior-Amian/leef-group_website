@@ -57,10 +57,11 @@ Vite redirige `/api` et `/uploads` vers l’API PHP.
 1. Construire le front : `cd frontend && npm run build` (le résultat est écrit dans `backend/public/app/`).
 2. Envoyer le dossier `backend/` sur l’hébergement. **Seul `backend/public/` doit être la racine web** (document root) : `app/`, `config/`, `database/` et `storage/` restent hors de portée des visiteurs.
 3. Créer la base et y charger `schema.sql` puis `seed.sql` ; créer un utilisateur MySQL dédié avec les seuls droits `SELECT, INSERT, UPDATE, DELETE`.
-4. Créer `backend/config/config.php` à partir de `config.example.php` (`debug` à `false`, `https` à `true`).
+4. Créer `backend/config/config.php` à partir de `config.example.php` (`debug` à `false`, `https` à `true`, `site_url` à l’adresse publique du site, indispensable au référencement).
 5. Créer le compte administrateur : `php bin/creer-admin.php …`
 6. Activer HTTPS, puis décommenter la redirection HTTPS dans `backend/public/.htaccess`.
 7. Vérifier que `backend/public/uploads/` et `backend/storage/logs/` sont accessibles en écriture par PHP.
+8. Référencement : déclarer le site dans Google Search Console et Bing Webmaster Tools, puis y soumettre `https://<domaine>/sitemap.xml`. Choisir une seule version du domaine (avec ou sans `www`) et rediriger l’autre en 301 chez l’hébergeur.
 
 ### Démo GitHub Pages (site vitrine statique)
 
@@ -68,6 +69,7 @@ Vite redirige `/api` et `/uploads` vers l’API PHP.
 
 - Le contenu vient de `frontend/public/contenu-demo.json`, un instantané de l’API. Pour le mettre à jour (API locale lancée) : `cd frontend && npm run demo:contenu`.
 - La démo n’a ni panel ni envoi de formulaire : le formulaire de partenariat l’indique et renvoie vers WhatsApp.
+- La démo est marquée `noindex` : elle ne doit pas concurrencer le vrai site dans Google.
 - Construction manuelle : `npm run build:pages` (résultat dans `frontend/dist-pages/`).
 
 ## Panel d’administration

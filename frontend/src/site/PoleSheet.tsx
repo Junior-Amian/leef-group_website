@@ -34,6 +34,11 @@ export function PoleSheet({ pole, p, onClose }: { pole: Pole | null; p: Parametr
     };
   }, [pole]);
 
+  // Fiche fermée par l'adresse (bouton Retour du navigateur) : le dialog encore ouvert doit l'être aussi.
+  useEffect(() => {
+    if (!pole && dialogRef.current?.open) dialogRef.current.close();
+  }, [pole]);
+
   const fermer = () => {
     const dialog = dialogRef.current;
     if (!dialog?.open) return;

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useMatch } from 'react-router-dom';
 import { api, ApiError } from '../lib/api';
 import type { SiteContent } from '../lib/types';
 import { Navbar } from './Navbar';
@@ -9,14 +10,18 @@ import { Partenariat } from './Partenariat';
 import { Contact } from './Contact';
 import { Footer } from './Footer';
 import { ActionBar } from './ActionBar';
+import { PageIntrouvable } from './PageIntrouvable';
 
 /**
  * Site public. Le contenu est injecté par le serveur (window.__SITE__) ;
  * à défaut (développement, base momentanément indisponible), il est chargé via l'API.
+ * Sur /poles/{slug}, la fiche du pôle est ouverte par-dessus l'accueil.
  */
 export function SitePage() {
   const [content, setContent] = useState<SiteContent | null>(() => window.__SITE__ ?? null);
   const [erreur, setErreur] = useState('');
+  const slug = useMatch('/poles/:slug')?.params.slug;
+  const poleOuvert = (slug && content?.poles.find((pole) => pole.slug === slug)) || null;
 
   const charger = useCallback(() => {
     setErreur('');
@@ -29,9 +34,13 @@ export function SitePage() {
     if (!content) charger();
   }, [content, charger]);
 
+  // Même format que le titre posé par le serveur (backend/app/Services/Seo.php).
   useEffect(() => {
-    if (content) document.title = content.parametres['seo.titre'] || document.title;
-  }, [content]);
+    if (!content) return;
+    document.title = poleOuvert
+      ? `${poleOuvert.nom} à Abidjan | LEEF GROUP`
+      : content.parametres['seo.titre'] || 'LEEF GROUP';
+  }, [content, poleOuvert]);
 
   useRevealOnScroll(content !== null);
 
@@ -53,6 +62,8 @@ export function SitePage() {
     );
   }
 
+  if (slug && !poleOuvert) return <PageIntrouvable />; // pôle inconnu ou désactivé
+
   const { parametres: p, poles } = content;
   return (
     <>
@@ -63,11 +74,11 @@ export function SitePage() {
       <main id="contenu">
         <Hero p={p} poles={poles} />
         <Groupe p={p} />
-        <PolesSection p={p} poles={poles} />
+        <PolesSection p={p} poles={poles} poleOuvert={poleOuvert} />
         <Partenariat p={p} poles={poles} />
         <Contact p={p} />
       </main>
-      <Footer p={p} />
+      <Footer p={p} poles={poles} />
       <ActionBar p={p} />
     </>
   );

@@ -1,16 +1,32 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight } from '@phosphor-icons/react';
 import { useReducedMotion } from '../lib/hooks';
-import { asset } from '../lib/liens';
+import { asset, lienPole } from '../lib/liens';
 import type { Parametres, Pole } from '../lib/types';
 import { PhotoPole } from '../shared/PhotoPole';
 import { PoleSheet } from './PoleSheet';
 
-/** Cartes des pôles qui s'empilent au défilement ; chaque carte ouvre la fiche détaillée du pôle. */
-export function PolesSection({ p, poles }: { p: Parametres; poles: Pole[] }) {
-  const [poleOuvert, setPoleOuvert] = useState<Pole | null>(null);
+/**
+ * Cartes des pôles qui s'empilent au défilement ; chaque carte est un lien vers /poles/{slug},
+ * qui ouvre la fiche détaillée du pôle (adresse propre à chaque pôle : partageable et indexable).
+ */
+export function PolesSection({ p, poles, poleOuvert }: { p: Parametres; poles: Pole[]; poleOuvert: Pole | null }) {
   const listeRef = useRef<HTMLOListElement>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
   useStackDepth(listeRef);
+
+  const fermerFiche = () => {
+    if ((location.state as { depuisSite?: boolean } | null)?.depuisSite) {
+      navigate(-1); // retour à l'adresse précédente, défilement conservé
+      return;
+    }
+    // Arrivée directe sur /poles/{slug} (lien partagé, moteur de recherche) : on rejoint l'accueil, sur la carte du pôle.
+    const slug = poleOuvert?.slug;
+    navigate('/', { replace: true });
+    if (slug) requestAnimationFrame(() => document.getElementById(`pole-${slug}`)?.scrollIntoView({ block: 'center' }));
+  };
 
   return (
     <section id="poles" className="bg-perle py-16 sm:py-24 lg:py-32">
@@ -23,18 +39,18 @@ export function PolesSection({ p, poles }: { p: Parametres; poles: Pole[] }) {
         <ol ref={listeRef} id="liste-poles" className="mt-10 space-y-8 sm:space-y-12 lg:mt-14 lg:space-y-28">
           {poles.map((pole, i) => (
             <li key={pole.id} id={`pole-${pole.slug}`} className="carte-pole" style={{ '--i': i } as CSSProperties}>
-              <PoleCard pole={pole} onOpen={() => setPoleOuvert(pole)} />
+              <PoleCard pole={pole} />
             </li>
           ))}
         </ol>
       </div>
 
-      <PoleSheet pole={poleOuvert} p={p} onClose={() => setPoleOuvert(null)} />
+      <PoleSheet pole={poleOuvert} p={p} onClose={fermerFiche} />
     </section>
   );
 }
 
-function PoleCard({ pole, onOpen }: { pole: Pole; onOpen: () => void }) {
+function PoleCard({ pole }: { pole: Pole }) {
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_30px_60px_-40px_rgb(0_19_78/.45)] ring-1 ring-ligne lg:grid lg:h-[30rem] lg:grid-cols-2">
       <span className="voile-carte pointer-events-none absolute inset-0 z-20 rounded-[28px] bg-navy" aria-hidden="true" />
@@ -52,16 +68,16 @@ function PoleCard({ pole, onOpen }: { pole: Pole; onOpen: () => void }) {
           ))}
         </ul>
         <div className="mt-auto pt-5 sm:pt-8">
-          {/* after:inset-0 + z-10 : toute la carte est cliquable (même la photo agrandie au survol), le bouton reste la cible sémantique.
-              Pas d'effet d'appui (scale) ici : un transform rétracterait la zone ::after pendant le clic et l'annulerait. */}
-          <button
-            type="button"
-            onClick={onOpen}
+          {/* after:inset-0 + z-10 : toute la carte est cliquable (même la photo agrandie au survol), le lien reste la cible sémantique.
+              Pas d'effet d'appui (scale) ici : un transform rétracterait la zone ::after pendant le clic et l'annulerait.
+              Un vrai lien (et non un bouton) : les moteurs de recherche découvrent ainsi la page de chaque pôle. */}
+          <Link
+            {...lienPole(pole)}
             className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-navy px-5 font-bold text-white transition-colors after:absolute after:inset-0 after:z-10 after:rounded-[28px] hover:bg-navy-800 group-hover:bg-navy-800 sm:w-auto sm:justify-start"
           >
-            Voir les {pole.prestations.length} prestations
+            Voir les {pole.prestations.length} prestations<span className="sr-only"> du pôle {pole.nom}</span>
             <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden />
-          </button>
+          </Link>
         </div>
       </div>
       <div className="order-first h-36 overflow-hidden bg-perle sm:h-60 lg:order-none lg:h-full">

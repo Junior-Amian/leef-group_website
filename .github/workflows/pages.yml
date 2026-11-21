@@ -29,6 +29,8 @@ jobs:
       - run: npm ci
       - run: npm run build:pages
       - run: touch dist-pages/.nojekyll
+      # GitHub Pages ne connaît pas les routes de l'application (/poles/...) : sa page 404 relance l'application.
+      - run: cp dist-pages/index.html dist-pages/404.html
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
