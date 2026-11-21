@@ -78,6 +78,26 @@
 .hub-info > * { transition: opacity .2s ease, filter .2s ease; }
 .hub-info[data-change="true"] > * { opacity: 0; filter: blur(2px); }
 
+/* Schéma vivant : mouvements continus et décoratifs (transform/opacity uniquement), coupés si mouvement réduit */
+@keyframes tourne { to { transform: rotate(360deg); } }
+.orbite, .orbite-lente { transform-box: view-box; transform-origin: 50% 50%; }
+.orbite { animation: tourne 48s linear infinite; }
+.orbite-lente { animation: tourne 110s linear infinite reverse; }
+/* Halo : deux ondes partent du symbole central, après l'entrée du schéma */
+@keyframes halo {
+  from { transform: translate(-50%, -50%) scale(1); opacity: .55; }
+  to { transform: translate(-50%, -50%) scale(1.85); opacity: 0; }
+}
+.halo { opacity: 0; transform: translate(-50%, -50%); animation: halo 3.6s cubic-bezier(.23, 1, .32, 1) infinite; animation-delay: calc(1s + var(--d, 0ms)); }
+/* Flottement des pôles, désynchronisé ; `translate` se cumule avec le transform du survol et de l'appui */
+@keyframes flotte { 50% { translate: 0 -5px; } }
+.hub-vivant .noeud-rond { animation: flotte 6s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -1s); }
+/* Barre de progression de la visite automatique */
+@keyframes progression { from { transform: scaleX(0); } }
+.progression { transform-origin: left; animation: progression var(--duree, 4.5s) linear both; }
+/* Filigrane du hero : rotation très lente */
+.filigrane { animation: tourne 140s linear infinite; }
+
 /* ---------- Pôles : cartes qui s'empilent au défilement ---------- */
 .carte-pole { position: sticky; top: calc(5.75rem + var(--i) * .75rem); }
 @media (min-width: 1024px) { .carte-pole { top: calc(6.75rem + var(--i) * 1.1rem); } }
@@ -142,5 +162,7 @@
   html { scroll-behavior: auto; }
   [data-reveal] { opacity: 1; transform: none; transition: none; }
   .hero-in, .mot > span, .hub-in .noeud, .hub-in .lien-hub, .fiche[open], .menu-mobile { animation: none; }
+  .orbite, .orbite-lente, .hub-vivant .noeud-rond, .progression, .filigrane { animation: none; }
+  .halo { display: none; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }

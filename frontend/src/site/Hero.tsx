@@ -10,7 +10,7 @@ const SLOGAN = ['Connecter', 'Structurer', 'Performer'];
 export function Hero({ p, poles }: { p: Parametres; poles: Pole[] }) {
   return (
     <section id="accueil" className="sur-sombre relative overflow-hidden bg-rouge text-white">
-      <img src={asset('leef-symbole-blanc.png')} alt="" aria-hidden="true" className="pointer-events-none absolute -bottom-40 -left-40 w-[560px] opacity-[.08]" />
+      <img src={asset('leef-symbole-blanc.png')} alt="" aria-hidden="true" className="filigrane pointer-events-none absolute -bottom-40 -left-40 w-[560px] opacity-[.08]" />
       <div className="relative mx-auto grid max-w-[1280px] items-center gap-12 px-4 pb-14 pt-32 sm:px-6 lg:min-h-[min(100dvh,58rem)] lg:grid-cols-12 lg:gap-10 lg:px-10 lg:pb-20 lg:pt-36">
         <div className="lg:col-span-7">
           <h1 className="font-display text-[3.4rem] font-black leading-[.92] tracking-[-0.04em] sm:text-[5.5rem] lg:text-[7rem]">
