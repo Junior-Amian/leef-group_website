@@ -119,6 +119,15 @@
 .champ:focus { outline: none; border-bottom-color: #00134E; box-shadow: 0 1px 0 #00134E; }
 .champ[aria-invalid="true"] { border-bottom-color: #C8000F; box-shadow: 0 1px 0 #C8000F; }
 
+/* ---------- Panel : fond perle teinté aux couleurs de la charte (fixe au défilement) ---------- */
+.fond-panel {
+  background-color: #F2F2F4;
+  background-image:
+    radial-gradient(60rem 34rem at 100% 0%, rgb(227 31 44 / .2), transparent 70%),
+    radial-gradient(56rem 34rem at 0% 100%, rgb(0 19 78 / .16), transparent 70%);
+  background-attachment: fixed;
+}
+
 /* ---------- Carte : sur écran tactile, pas de capture du défilement ---------- */
 @media (pointer: coarse) {
   .carte-wrap iframe { pointer-events: none; }
