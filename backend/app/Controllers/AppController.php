@@ -14,6 +14,15 @@ use App\Core\View;
  */
 final class AppController extends Controller
 {
+    /**
+     * Ressources autorisées dans la page. %s = nonce du script injecté.
+     * img-src https: : photos des pôles hébergées ailleurs (adresse https saisie dans le panel).
+     * frame-src : carte OpenStreetMap de la section Contact.
+     */
+    private const CONTENT_SECURITY_POLICY = "default-src 'self'; script-src 'self' 'nonce-%s'; style-src 'self'; "
+        . "img-src 'self' https: data: blob:; font-src 'self' data:; connect-src 'self'; "
+        . "frame-src https://www.openstreetmap.org; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'";
+
     public function page(): never
     {
         $html = @file_get_contents(BASE_PATH . '/public/app/index.html');
@@ -31,9 +40,14 @@ final class AppController extends Controller
             }
         }
 
-        $head = View::render('app-head', ['isAdmin' => $isAdmin, 'content' => $content]);
+        // Nonce à usage unique : seul le script injecté par le serveur (window.__SITE__) peut s'exécuter en ligne.
+        $nonce = base64_encode(random_bytes(16));
+        header('Content-Security-Policy: ' . sprintf(self::CONTENT_SECURITY_POLICY, $nonce));
+
+        $head = View::render('app-head', ['isAdmin' => $isAdmin, 'content' => $content, 'nonce' => $nonce]);
         $title = $isAdmin ? 'Administration | LEEF GROUP' : ($content['parametres']['seo.titre'] ?? 'LEEF GROUP');
-        $html = preg_replace('#<title>.*?</title>#s', '<title>' . View::e($title) . '</title>', $html, 1);
+        // Callback : un « $0 » ou « \1 » dans le titre saisi au panel reste du texte (pas une référence de regex).
+        $html = preg_replace_callback('#<title>.*?</title>#s', static fn (): string => '<title>' . View::e($title) . '</title>', $html, 1);
         Response::html(str_replace('</head>', $head . '</head>', (string) $html));
     }
 }

@@ -45,6 +45,15 @@ final class Proposal
         )->fetchColumn();
     }
 
+    /** Nombre de propositions reçues sur tout le site pendant les $minutes dernières minutes. */
+    public static function countRecent(int $minutes): int
+    {
+        return (int) Database::query(
+            'SELECT COUNT(*) FROM propositions WHERE cree_le > (NOW() - INTERVAL ? MINUTE)',
+            [$minutes]
+        )->fetchColumn();
+    }
+
     /** @return array{elements: list<array<string, mixed>>, page: int, pages: int, total: int, nonLues: int} */
     public static function paginate(int $page): array
     {

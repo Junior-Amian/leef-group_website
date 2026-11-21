@@ -39,12 +39,13 @@ Tables : `parametres` (clé/valeur), `poles`, `prestations`, `propositions`, `ad
 ## Sécurité
 
 - Requêtes préparées partout (PDO, émulation désactivée).
-- Session : cookie `httpOnly`, `SameSite=Strict`, `Secure` en HTTPS, mode strict, expiration après 2 h d’inactivité, nouvel identifiant à la connexion.
+- Session : cookie `httpOnly`, `SameSite=Strict`, `Secure` en HTTPS (toujours si `https` vaut `true` dans la configuration), mode strict, expiration après 2 h d’inactivité et 12 h au total, nouvel identifiant à la connexion. À chaque requête du panel, le compte est relu en base : une session est refusée si le compte a été supprimé ou si son mot de passe a changé depuis la connexion.
 - CSRF : jeton par session exigé en en-tête `X-CSRF-Token` sur toute écriture du panel, et contrôle de l’en-tête `Origin` sur toutes les écritures.
-- Mots de passe hachés (`password_hash`) ; blocage de l’adresse IP après 5 échecs en 15 minutes.
-- Formulaire public : validation en liste blanche, piège à robots, 5 envois par heure et par IP au maximum.
+- Connexion : mots de passe hachés (`password_hash`), temps de réponse identique que l’e-mail existe ou non. Limites comptées avant la vérification du mot de passe (atomique) : 5 essais par adresse en 15 minutes et 30 par compte en 60 minutes. Une adresse IPv6 compte pour son préfixe /64 (`Request::rateLimitKey`).
+- Formulaire public : validation en liste blanche (e-mails sans `? & = % / #`), piège à robots, 5 envois par heure et par adresse ; au-delà de 20 propositions par heure sur le site, l’e-mail de notification est suspendu (la proposition reste enregistrée).
 - Uploads : type réel lu dans le fichier (`finfo` et `getimagesize`), 4 Mo maximum, nom aléatoire, exécution de scripts interdite dans `uploads/`.
-- En-têtes de sécurité ; erreurs détaillées uniquement dans `storage/logs/app.log`, hors de la racine web.
+- En-têtes de sécurité, dont Content-Security-Policy (nonce pour le seul script en ligne, `window.__SITE__`) et HSTS quand `https` vaut `true` ; erreurs détaillées uniquement dans `storage/logs/app.log`, hors de la racine web.
+- `app/`, `config/`, `database/`, `bin/` et `storage/` contiennent un `.htaccess` qui interdit tout accès, au cas où la racine web serait mal réglée.
 
 ## Front-end
 

@@ -16,21 +16,24 @@ final class AuthController extends Controller
     public function login(): never
     {
         $data = $this->request->json();
-        $ip = $this->request->ip();
+        $email = is_string($data['email'] ?? null) ? $data['email'] : '';
+        $password = is_string($data['motDePasse'] ?? null) ? $data['motDePasse'] : '';
+        $addressKey = $this->request->rateLimitKey();
 
-        if (LoginAttempt::isLocked($ip)) {
+        // Tentative comptée avant la vérification du mot de passe (voir LoginAttempt).
+        if (!LoginAttempt::attempt($addressKey, $email)) {
             throw HttpException::tooManyRequests('Trop de tentatives. Réessayez dans ' . LoginAttempt::LOCK_MINUTES . ' minutes.');
         }
-        $admin = Admin::verify((string) ($data['email'] ?? ''), (string) ($data['motDePasse'] ?? ''));
+        $admin = Admin::verify($email, $password);
         if ($admin === null) {
-            LoginAttempt::recordFailure($ip);
             throw new HttpException(401, 'identifiants_invalides', 'Adresse e-mail ou mot de passe incorrect.');
         }
-        LoginAttempt::clear($ip);
+        LoginAttempt::clear($addressKey, $email);
 
         Session::start($this->request);
         Session::regenerate(); // nouvel identifiant (anti-fixation) et nouveau jeton CSRF
         Session::set('admin', $admin);
+        Session::set('admin_empreinte', Admin::sessionFingerprint($admin['id'])); // revérifiée par Authenticate
         $this->json(['admin' => $admin, 'csrfToken' => Session::csrfToken()]);
     }
 

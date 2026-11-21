@@ -40,7 +40,9 @@ final class Validator
     public function email(string $field, bool $required = true): string
     {
         $value = $this->string($field, 190, $required);
-        if ($value !== '' && filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+        // FILTER_VALIDATE_EMAIL accepte « ? & = % / # » (valides selon la RFC, mais jamais vus dans une vraie adresse) :
+        // refusés, car ils permettent d'injecter des paramètres dans un lien mailto: (« a?bcc=x@y.ci »).
+        if ($value !== '' && (filter_var($value, FILTER_VALIDATE_EMAIL) === false || preg_match('#[?&=%/\\\\\#]#', $value))) {
             return $this->fail($field, 'Saisissez une adresse e-mail valide, par exemple nom@entreprise.ci.', $value);
         }
         return mb_strtolower($value);

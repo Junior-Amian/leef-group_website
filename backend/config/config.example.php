@@ -10,6 +10,9 @@ return [
     ],
     // true uniquement en local : affiche le message des erreurs serveur dans les réponses de l'API.
     'debug' => false,
+    // Site servi en HTTPS (production) : cookie de session toujours « Secure » et en-tête HSTS.
+    // Laisser à true même derrière un proxy ou Cloudflare ; false seulement en local sans certificat.
+    'https' => true,
     // Expéditeur des notifications (adresse du domaine du site, sinon les e-mails risquent le spam).
     'mail_from' => 'no-reply@leef-group.com',
 ];
