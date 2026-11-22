@@ -47,6 +47,16 @@ Tables : `parametres` (clé/valeur), `poles`, `prestations`, `propositions`, `ad
 - En-têtes de sécurité, dont Content-Security-Policy (nonce pour le seul script en ligne, `window.__SITE__`) et HSTS quand `https` vaut `true` ; erreurs détaillées uniquement dans `storage/logs/app.log`, hors de la racine web.
 - `app/`, `config/`, `database/`, `bin/` et `storage/` contiennent un `.htaccess` qui interdit tout accès, au cas où la racine web serait mal réglée.
 
+## Référencement
+
+- **Pages indexables** : l’accueil `/` et une page par pôle actif, `/poles/{slug}` (l’accueil avec la fiche du pôle ouverte). Toute autre adresse publique répond **404** avec `noindex`. Les adresses sont reconnues à l’identique par le serveur (`Services/Seo.php`) et par React (`App.tsx`).
+- **Balises servies dans le HTML initial** (sans attendre JavaScript), par `AppController` et `Views/app-head.php` : titre, description (160 caractères au plus), adresse canonique, Open Graph et carte Twitter avec l’image de partage `leef-partage.png` (1200 × 630), et données structurées JSON-LD. Accueil : `WebSite` et `Organization` (contact, siège géolocalisé, pôles). Page d’un pôle : `Service` (prestations) et `BreadcrumbList`.
+- **Titres** : accueil = paramètre `seo.titre` du panel ; pôle = « {nom} à Abidjan | LEEF GROUP », même format côté serveur et côté React.
+- **`/robots.txt` et `/sitemap.xml`** sont générés par `SeoController` à partir des pôles actifs. Ils exigent `site_url` dans la configuration, comme l’adresse canonique.
+- **Liens explorables** : les cartes et le pied de page pointent vers `/poles/{slug}` par de vrais liens. Fermer une fiche revient en arrière si on venait du site, sinon ramène à l’accueil sur la carte du pôle.
+- Les réponses de l’API portent `X-Robots-Tag: noindex`. La démo GitHub Pages est en `noindex` (plugin dans `vite.config.ts`).
+- **Limite connue** : le texte des sections est affiché par React. Google exécute JavaScript et le voit, mais les robots qui ne l’exécutent pas (la plupart des robots d’IA) ne lisent que les balises et le JSON-LD.
+
 ## Front-end
 
 - `site/` : un composant par section ; l’état reste au plus près de son usage (la barre d’action et la navigation observent elles-mêmes la page via `IntersectionObserver`).

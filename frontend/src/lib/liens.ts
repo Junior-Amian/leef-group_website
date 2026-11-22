@@ -3,6 +3,12 @@
 /** Fichier du dossier public (logos, pictogrammes) : préfixé par /app/ une fois le site construit. */
 export const asset = (fichier: string) => `${import.meta.env.BASE_URL}assets/${fichier}`;
 
+/**
+ * Lien (react-router) vers la page d'un pôle. L'état indique qu'on vient du site :
+ * fermer la fiche revient alors en arrière au lieu de recharger l'accueil.
+ */
+export const lienPole = (pole: { slug: string }) => ({ to: `/poles/${pole.slug}`, state: { depuisSite: true } });
+
 const chiffres = (numero: string) => numero.replace(/[^\d+]/g, '');
 
 export const lienTelephone = (numero: string) => `tel:${chiffres(numero)}`;
