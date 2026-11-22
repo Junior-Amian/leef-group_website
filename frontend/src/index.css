@@ -40,12 +40,31 @@
 }
 [data-reveal].is-visible { opacity: 1; transform: none; }
 
-/* ---------- Entrée du hero : le slogan monte mot par mot ---------- */
+/* ---------- Entrée du hero : chaque verbe du slogan a son geste (joué une fois, ~1,8 s) ---------- */
 @keyframes leef-in { from { opacity: 0; transform: translateY(14px); } }
 .hero-in { animation: leef-in .9s cubic-bezier(.16, 1, .3, 1) both; animation-delay: var(--d, 0ms); }
+.verbe { display: block; }
+
+/* Connecter : les deux moitiés du mot glissent l'une vers l'autre et se rejoignent. */
+@keyframes rejoint { from { opacity: 0; transform: translateX(var(--ecart)); } }
+.joint > span { display: inline-block; animation: rejoint 1.05s cubic-bezier(.16, 1, .3, 1) both; animation-delay: var(--d, 0ms); }
+.joint > span:first-child { --ecart: -.5em; }
+.joint > span:last-child { --ecart: .5em; }
+
+/* Structurer : monte de son masque, ligne nette. */
 @keyframes monte { from { transform: translateY(105%); } }
 .mot { display: block; overflow: hidden; padding-bottom: .04em; }
 .mot > span { display: inline-block; animation: monte .95s var(--sortie) both; animation-delay: var(--d, 0ms); }
+
+/* Performer : arrive avec un léger élan (courbe qui dépasse à peine sa cible), puis un soulignement se trace. */
+@keyframes elan { from { opacity: 0; transform: translateX(-.45em); } }
+@keyframes souligne { from { transform: scaleX(0); } }
+.elan { position: relative; display: inline-block; animation: elan .85s cubic-bezier(.2, 1.25, .35, 1) both; animation-delay: var(--d, 0ms); }
+.elan::after {
+  content: ''; position: absolute; left: .03em; right: .03em; bottom: -.02em; height: .065em;
+  border-radius: 999px; background: currentColor; transform-origin: left center;
+  animation: souligne .6s var(--sortie) both; animation-delay: calc(var(--d, 0ms) + 650ms);
+}
 
 /* ---------- Barre de navigation flottante ---------- */
 .entete {
@@ -161,7 +180,7 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   [data-reveal] { opacity: 1; transform: none; transition: none; }
-  .hero-in, .mot > span, .hub-in .noeud, .hub-in .lien-hub, .fiche[open], .menu-mobile { animation: none; }
+  .hero-in, .mot > span, .joint > span, .elan, .elan::after, .hub-in .noeud, .hub-in .lien-hub, .fiche[open], .menu-mobile { animation: none; }
   .orbite, .orbite-lente, .hub-vivant .noeud-rond, .progression, .filigrane { animation: none; }
   .halo { display: none; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
