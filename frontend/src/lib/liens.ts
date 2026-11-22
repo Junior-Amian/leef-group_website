@@ -10,7 +10,12 @@ export const lienTelephone = (numero: string) => `tel:${chiffres(numero)}`;
 export const lienWhatsApp = (numero: string, message?: string) =>
   `https://wa.me/${chiffres(numero).replace(/^\+/, '')}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
 
-export const lienEmail = (email: string) => `mailto:${email}`;
+/**
+ * L'adresse est encodée : une adresse saisie par un visiteur comme « a?bcc=x@y.ci » ne doit pas
+ * pouvoir ajouter des destinataires ou un message au lien (seul « @ » reste lisible).
+ */
+export const lienEmail = (email: string, sujet?: string) =>
+  `mailto:${encodeURIComponent(email).replace(/%40/g, '@')}${sujet ? `?subject=${encodeURIComponent(sujet)}` : ''}`;
 
 export const lienItineraire = (adresse: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adresse)}`;

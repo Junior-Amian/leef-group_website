@@ -61,6 +61,23 @@ final class Request
         return (string) ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
     }
 
+    /**
+     * Adresse servant aux limites d'envoi (connexion, formulaire public) : l'IPv4 telle quelle,
+     * l'IPv6 réduite à son préfixe /64 (un abonné en dispose de milliards : sans cela, la limite se contourne).
+     */
+    public function rateLimitKey(): string
+    {
+        $ip = $this->ip();
+        $binary = @inet_pton($ip);
+        if ($binary === false || strlen($binary) !== 16) {
+            return $ip;
+        }
+        if (str_starts_with($binary, str_repeat("\0", 10) . "\xff\xff")) {
+            return (string) inet_ntop(substr($binary, 12)); // IPv4 notée en IPv6 (::ffff:1.2.3.4)
+        }
+        return inet_ntop(substr($binary, 0, 8) . str_repeat("\0", 8)) . '/64';
+    }
+
     public function host(): string
     {
         return (string) ($_SERVER['HTTP_HOST'] ?? '');

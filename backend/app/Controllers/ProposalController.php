@@ -11,7 +11,8 @@ use App\Services\ProposalNotifier;
 /** Dépôt d'une proposition de partenariat depuis le site public. */
 final class ProposalController extends Controller
 {
-    private const MAX_PER_HOUR = 5;
+    private const MAX_PER_HOUR = 5;                 // par adresse
+    private const MAX_NOTIFICATIONS_PER_HOUR = 20;  // pour tout le site : au-delà, rafale de spam probable
 
     /** POST /api/propositions */
     public function store(): never
@@ -25,13 +26,19 @@ final class ProposalController extends Controller
 
         $proposal = Proposal::validate($data);
 
-        $ip = $this->request->ip();
-        if (Proposal::countRecentFromIp($ip, 60) >= self::MAX_PER_HOUR) {
+        // Adresse IPv6 réduite à son préfixe /64 (voir Request::rateLimitKey) : c'est aussi ce qui est enregistré.
+        $addressKey = $this->request->rateLimitKey();
+        if (Proposal::countRecentFromIp($addressKey, 60) >= self::MAX_PER_HOUR) {
             throw HttpException::tooManyRequests('Vous avez envoyé plusieurs propositions récemment. Réessayez dans une heure ou écrivez-nous sur WhatsApp.');
         }
 
-        Proposal::create($proposal, $ip);
-        ProposalNotifier::send($proposal);
+        Proposal::create($proposal, $addressKey);
+        // Toujours enregistrée et visible dans le panel ; seul l'e-mail est suspendu en cas de rafale.
+        if (Proposal::countRecent(60) <= self::MAX_NOTIFICATIONS_PER_HOUR) {
+            ProposalNotifier::send($proposal);
+        } else {
+            error_log('Notification de partenariat suspendue : plus de ' . self::MAX_NOTIFICATIONS_PER_HOUR . ' propositions en une heure.');
+        }
         $this->json(['message' => 'Proposition envoyée.'], 201);
     }
 }

@@ -11,7 +11,8 @@ namespace App\Core;
 final class Session
 {
     private const NAME = 'LEEFADMIN';
-    private const IDLE_TIMEOUT = 7200; // 2 heures
+    private const IDLE_TIMEOUT = 7200;   // 2 heures sans activité
+    private const MAX_LIFETIME = 43200;  // 12 heures au total, même en activité continue
 
     public static function exists(): bool
     {
@@ -29,18 +30,23 @@ final class Session
         session_set_cookie_params([
             'lifetime' => 0,
             'path'     => '/',
-            'secure'   => $request->isHttps(),
+            // Config « https » : derrière un proxy, PHP peut ne pas voir le HTTPS ; le cookie reste Secure.
+            'secure'   => $request->isHttps() || Config::get('https', false),
             'httponly' => true,
             'samesite' => 'Strict',
         ]);
         session_start();
 
+        $now = time();
         $lastActivity = $_SESSION['_last_activity'] ?? null;
-        if ($lastActivity !== null && time() - $lastActivity > self::IDLE_TIMEOUT) {
+        $createdAt = $_SESSION['_created'] ?? null;
+        if (($lastActivity !== null && $now - $lastActivity > self::IDLE_TIMEOUT)
+            || ($createdAt !== null && $now - $createdAt > self::MAX_LIFETIME)) {
             self::destroy();
             session_start();
         }
-        $_SESSION['_last_activity'] = time();
+        $_SESSION['_created'] ??= $now;
+        $_SESSION['_last_activity'] = $now;
     }
 
     public static function get(string $key): mixed
@@ -58,6 +64,7 @@ final class Session
     {
         session_regenerate_id(true);
         $_SESSION['_csrf'] = bin2hex(random_bytes(32));
+        $_SESSION['_created'] = time(); // la durée maximale court à partir de la connexion
     }
 
     public static function csrfToken(): string
@@ -68,7 +75,10 @@ final class Session
     public static function destroy(): void
     {
         $_SESSION = [];
-        setcookie(self::NAME, '', ['expires' => time() - 3600, 'path' => '/', 'httponly' => true, 'samesite' => 'Strict']);
+        setcookie(self::NAME, '', [
+            'expires' => time() - 3600, 'path' => '/', 'secure' => (bool) Config::get('https', false),
+            'httponly' => true, 'samesite' => 'Strict',
+        ]);
         session_destroy();
     }
 }

@@ -1,0 +1,2 @@
+# Dossier interne : jamais servi au navigateur, même si la racine web est mal réglée (seul public/ doit l’être).
+Require all denied

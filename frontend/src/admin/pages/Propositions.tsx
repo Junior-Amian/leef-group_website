@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CaretLeft, CaretRight, EnvelopeSimple, Trash, Tray } from '@phosphor-icons/react';
 import { api, ApiError } from '../../lib/api';
+import { lienEmail } from '../../lib/liens';
 import type { PageDePropositions, Profil, Proposition } from '../../lib/types';
 import { useSession } from '../session';
 import { useChargement } from '../useChargement';
@@ -112,7 +113,7 @@ function CarteProposition({ proposition: p, onChange, onSupprime }: {
           <p className="whitespace-pre-line leading-relaxed">{p.message}</p>
           {erreur && <div className="mt-4"><Message type="erreur">{erreur}</Message></div>}
           <div className="mt-5 flex flex-wrap gap-2">
-            <a href={`mailto:${p.email}?subject=${encodeURIComponent('Votre proposition de partenariat')}`} className="inline-flex h-11 items-center gap-2 rounded-xl bg-navy px-4 text-sm font-bold text-white hover:bg-navy-800">
+            <a href={lienEmail(p.email, 'Votre proposition de partenariat')} className="inline-flex h-11 items-center gap-2 rounded-xl bg-navy px-4 text-sm font-bold text-white hover:bg-navy-800">
               <EnvelopeSimple size={18} aria-hidden />Répondre à {p.email}
             </a>
             <Bouton variante="secondaire" onClick={() => marquer(!p.lue)}>{p.lue ? 'Marquer comme non lue' : 'Marquer comme lue'}</Bouton>
