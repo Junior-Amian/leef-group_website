@@ -14,9 +14,11 @@ use App\Controllers\Admin\ImageController;
 use App\Controllers\Admin\PoleController;
 use App\Controllers\Admin\ProposalController as AdminProposalController;
 use App\Controllers\Admin\SettingController;
+use App\Controllers\Admin\StatisticsController;
 use App\Controllers\AuthController;
 use App\Controllers\ProposalController;
 use App\Controllers\SiteController;
+use App\Controllers\VisitController;
 use App\Core\Router;
 use App\Middleware\Authenticate;
 use App\Middleware\SameOrigin;
@@ -27,6 +29,7 @@ return static function (Router $router): void {
         // Site public
         $r->get('/site', [SiteController::class, 'show']);
         $r->post('/propositions', [ProposalController::class, 'store']);
+        $r->post('/visites', [VisitController::class, 'store']); // mesure d'audience anonyme
 
         // Session du panel
         $r->post('/session', [AuthController::class, 'login']);
@@ -37,6 +40,8 @@ return static function (Router $router): void {
 
         // Panel d'administration
         $r->group('/admin', [Authenticate::class, VerifyCsrf::class], static function (Router $r): void {
+            $r->get('/statistiques', [StatisticsController::class, 'index']);
+
             $r->get('/parametres', [SettingController::class, 'index']);
             $r->put('/parametres', [SettingController::class, 'update']);
 

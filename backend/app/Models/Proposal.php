@@ -54,6 +54,54 @@ final class Proposal
         )->fetchColumn();
     }
 
+    public static function countUnread(): int
+    {
+        return (int) Database::query('SELECT COUNT(*) FROM propositions WHERE lue = 0')->fetchColumn();
+    }
+
+    /** Propositions reçues entre deux dates incluses (AAAA-MM-JJ). */
+    public static function countBetween(string $from, string $to): int
+    {
+        return (int) Database::query(
+            'SELECT COUNT(*) FROM propositions WHERE cree_le >= ? AND cree_le < ? + INTERVAL 1 DAY',
+            [$from, $to]
+        )->fetchColumn();
+    }
+
+    /** @return array<string, int> nombre par jour (AAAA-MM-JJ), jours sans proposition absents */
+    public static function countByDay(string $from, string $to): array
+    {
+        $rows = Database::query(
+            'SELECT DATE(cree_le) AS jour, COUNT(*) AS nombre FROM propositions
+             WHERE cree_le >= ? AND cree_le < ? + INTERVAL 1 DAY GROUP BY DATE(cree_le)',
+            [$from, $to]
+        )->fetchAll();
+        return array_column(array_map(static fn (array $r) => [$r['jour'], (int) $r['nombre']], $rows), 1, 0);
+    }
+
+    /** @return list<array{profil: string, nombre: int}> du plus fréquent au moins fréquent */
+    public static function countByProfile(string $from, string $to): array
+    {
+        return self::countGroupedBy('profil', $from, $to);
+    }
+
+    /** @return list<array{pole: string, nombre: int}> du plus fréquent au moins fréquent */
+    public static function countByPole(string $from, string $to): array
+    {
+        return self::countGroupedBy('pole', $from, $to);
+    }
+
+    /** @param 'profil'|'pole' $column colonne fixée par le code, jamais par la requête */
+    private static function countGroupedBy(string $column, string $from, string $to): array
+    {
+        $rows = Database::query(
+            "SELECT {$column} AS valeur, COUNT(*) AS nombre FROM propositions
+             WHERE cree_le >= ? AND cree_le < ? + INTERVAL 1 DAY GROUP BY {$column} ORDER BY nombre DESC, valeur",
+            [$from, $to]
+        )->fetchAll();
+        return array_map(static fn (array $r) => [$column => $r['valeur'], 'nombre' => (int) $r['nombre']], $rows);
+    }
+
     /** @return array{elements: list<array<string, mixed>>, page: int, pages: int, total: int, nonLues: int} */
     public static function paginate(int $page): array
     {
@@ -70,7 +118,7 @@ final class Proposal
             'page'     => $page,
             'pages'    => $pages,
             'total'    => $total,
-            'nonLues'  => (int) Database::query('SELECT COUNT(*) FROM propositions WHERE lue = 0')->fetchColumn(),
+            'nonLues'  => self::countUnread(),
         ];
     }
 

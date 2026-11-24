@@ -61,7 +61,8 @@ Vite redirige `/api` et `/uploads` vers l’API PHP.
 5. Créer le compte administrateur : `php bin/creer-admin.php …`
 6. Activer HTTPS, puis décommenter la redirection HTTPS dans `backend/public/.htaccess`.
 7. Vérifier que `backend/public/uploads/` et `backend/storage/logs/` sont accessibles en écriture par PHP.
-8. Référencement : déclarer le site dans Google Search Console et Bing Webmaster Tools, puis y soumettre `https://<domaine>/sitemap.xml`. Choisir une seule version du domaine (avec ou sans `www`) et rediriger l’autre en 301 chez l’hébergeur.
+8. Base déjà en service (créée avant l'ajout du tableau de bord) : charger une fois `database/migration-2026-11-statistiques.sql`, qui ajoute les tables de la mesure d'audience.
+9. Référencement : déclarer le site dans Google Search Console et Bing Webmaster Tools, puis y soumettre `https://<domaine>/sitemap.xml`. Choisir une seule version du domaine (avec ou sans `www`) et rediriger l’autre en 301 chez l’hébergeur.
 
 ### Démo GitHub Pages (site vitrine statique)
 
@@ -74,4 +75,10 @@ Vite redirige `/api` et `/uploads` vers l’API PHP.
 
 ## Panel d’administration
 
-`/admin` : propositions de partenariat reçues, textes et coordonnées du site, contenu et photo des six pôles. Sans photo, un pôle affiche un placeholder (pictogramme officiel, « Photo à venir »).
+`/admin` : tableau de bord (statistiques du site), propositions de partenariat reçues, textes et coordonnées du site, contenu et photo des six pôles. Sans photo, un pôle affiche un placeholder (pictogramme officiel, « Photo à venir »).
+
+### Tableau de bord
+
+Page d'accueil du panel : visiteurs, pages vues, propositions reçues et taux de conversion sur 7, 30 ou 90 jours, comparés à la période précédente ; visiteurs par jour, pages les plus vues, provenance des visites, appareils, propositions par profil et par pôle.
+
+La mesure d'audience est interne et anonyme (aucun outil tiers, aucun cookie, donc aucun bandeau de consentement) : un visiteur n'est reconnu que le jour même, aucune adresse IP n'est conservée et les données sont supprimées après 13 mois. Les robots, les navigateurs qui refusent le suivi (Do Not Track, Global Privacy Control) et les administrateurs connectés ne sont pas comptés. Les chiffres démarrent à la mise en ligne de cette fonction.

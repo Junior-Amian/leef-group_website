@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useMatch } from 'react-router-dom';
+import { useLocation, useMatch } from 'react-router-dom';
 import { api, ApiError } from '../lib/api';
+import { signalerPageVue } from '../lib/audience';
 import type { SiteContent } from '../lib/types';
 import { Navbar } from './Navbar';
 import { Hero } from './Hero';
@@ -41,6 +42,13 @@ export function SitePage() {
       ? `${poleOuvert.nom} à Abidjan | LEEF GROUP`
       : content.parametres['seo.titre'] || 'LEEF GROUP';
   }, [content, poleOuvert]);
+
+  // Page vue comptée une fois la page affichée (accueil ou fiche d'un pôle existant).
+  const pageAffichee = content !== null && !(slug && !poleOuvert);
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pageAffichee) signalerPageVue(pathname);
+  }, [pageAffichee, pathname]);
 
   useRevealOnScroll(content !== null);
 

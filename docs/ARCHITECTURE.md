@@ -20,8 +20,8 @@ Navigateur ──► backend/public/index.php (contrôleur frontal unique)
 |---|---|---|
 | `Core/` | Socle : routeur, requête, réponse, base de données, session, validation, vue | `Router`, `Request`, `Response`, `Database`, `Session`, `Validator`, `View`, `HttpException`, `Controller` |
 | `Middleware/` | Contrôles avant l’action | `SameOrigin`, `Authenticate`, `VerifyCsrf` |
-| `Models/` | Accès aux données et règles de validation de chaque ressource | `Setting`, `Pole`, `Proposal`, `Admin`, `LoginAttempt` |
-| `Controllers/` | Lisent la requête, appellent les modèles, renvoient la réponse | `Site`, `App`, `Proposal`, `Auth`, `Admin/*` |
+| `Models/` | Accès aux données et règles de validation de chaque ressource | `Setting`, `Pole`, `Proposal`, `Visit`, `Admin`, `LoginAttempt` |
+| `Controllers/` | Lisent la requête, appellent les modèles, renvoient la réponse | `Site`, `App`, `Proposal`, `Visit`, `Auth`, `Admin/*` |
 | `Services/` | Effets externes | `ImageUploader`, `ProposalNotifier` |
 | `Views/` | Gabarit HTML | `app-head.php` |
 
@@ -30,7 +30,7 @@ Routes : `backend/config/routes.php`. Toutes les erreurs suivent le même format
 
 ## Données
 
-Tables : `parametres` (clé/valeur), `poles`, `prestations`, `propositions`, `admins`, `tentatives_connexion` (voir `database/schema.sql`).
+Tables : `parametres` (clé/valeur), `poles`, `prestations`, `propositions`, `visites`, `sels_visites`, `admins`, `tentatives_connexion` (voir `database/schema.sql` ; une base existante se met à jour avec `database/migration-*.sql`).
 
 - **Source unique des paramètres éditables** : `Models/Setting::DEFINITIONS` (clé, libellé, type, longueur maximale). L’API renvoie ces définitions et le panel génère son formulaire à partir d’elles : ajouter un paramètre côté serveur l’ajoute au panel sans autre modification.
 - **Validation** côté serveur uniquement (une seule source de règles) ; le front affiche les erreurs par champ renvoyées en 422.
@@ -47,6 +47,13 @@ Tables : `parametres` (clé/valeur), `poles`, `prestations`, `propositions`, `ad
 - En-têtes de sécurité, dont Content-Security-Policy (nonce pour le seul script en ligne, `window.__SITE__`) et HSTS quand `https` vaut `true` ; erreurs détaillées uniquement dans `storage/logs/app.log`, hors de la racine web.
 - `app/`, `config/`, `database/`, `bin/` et `storage/` contiennent un `.htaccess` qui interdit tout accès, au cas où la racine web serait mal réglée.
 
+## Statistiques (tableau de bord)
+
+- **Collecte** : le site public signale chaque page affichée (`lib/audience.ts`, appelé par `SitePage`) à `POST /api/visites`. Le serveur n'accepte que les pages publiques (`/` et `/poles/{slug}` d'un pôle actif) et ignore les robots, les refus de suivi (`DNT`, `Sec-GPC`) et les administrateurs connectés ; il répond toujours 204.
+- **Anonymat** (`Models/Visit`) : une ligne par page vue avec la date (sans l'heure), la page, le domaine d'origine (à l'arrivée seulement) et le type d'appareil. Le visiteur est une empreinte de 16 caractères (HMAC de l'adresse et du navigateur avec un sel aléatoire du jour) ; le sel est supprimé le lendemain. Pas de cookie, donc pas de consentement à recueillir. Données supprimées après 13 mois ; 300 pages vues par visiteur et par jour au plus (gonflage volontaire).
+- **Conséquence** : un « visiteur » est compté une fois par jour ; sur une période, c'est la somme des visiteurs quotidiens.
+- **Restitution** : `GET /api/admin/statistiques?periode=7|30|90` (`Admin/StatisticsController`) renvoie totaux, période précédente, série par jour, pages, provenances, appareils et propositions ; page `admin/pages/Statistiques.tsx`, courbe en SVG sans bibliothèque.
+
 ## Référencement
 
 - **Pages indexables** : l’accueil `/` et une page par pôle actif, `/poles/{slug}` (l’accueil avec la fiche du pôle ouverte). Toute autre adresse publique répond **404** avec `noindex`. Les adresses sont reconnues à l’identique par le serveur (`Services/Seo.php`) et par React (`App.tsx`).
@@ -60,7 +67,7 @@ Tables : `parametres` (clé/valeur), `poles`, `prestations`, `propositions`, `ad
 ## Front-end
 
 - `site/` : un composant par section ; l’état reste au plus près de son usage (la barre d’action et la navigation observent elles-mêmes la page via `IntersectionObserver`).
-- `admin/` : session (contexte), hook `useChargement` pour les quatre pages, composants d’interface dans `ui.tsx`.
+- `admin/` : session (contexte), hook `useChargement` pour les cinq pages, composants d’interface dans `ui.tsx`.
 - `lib/` : types du contrat de l’API, client HTTP, construction des liens (téléphone, WhatsApp, carte).
 
 ## Volontairement exclu (YAGNI)

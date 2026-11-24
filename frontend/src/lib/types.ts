@@ -66,6 +66,28 @@ export type DefinitionParametre = {
 
 export type Admin = { id: number; email: string };
 
+export type Appareil = 'mobile' | 'tablette' | 'ordinateur';
+
+export type TotauxStatistiques = { pagesVues: number; visiteurs: number; visites: number; propositions: number };
+
+/** Tableau de bord du panel (GET /api/admin/statistiques?periode=7|30|90). Dates au format AAAA-MM-JJ. */
+export type Statistiques = {
+  periode: 7 | 30 | 90;
+  debut: string;
+  fin: string;
+  totaux: TotauxStatistiques;
+  /** Même durée, juste avant la période : sert à l'évolution des indicateurs. */
+  precedent: TotauxStatistiques;
+  parJour: { jour: string; pagesVues: number; visiteurs: number; propositions: number }[];
+  pages: { chemin: string; libelle: string; pagesVues: number; visiteurs: number }[];
+  /** source vide = accès direct (adresse tapée, favori, application). */
+  sources: { source: string; visites: number }[];
+  appareils: Record<Appareil, number>;
+  propositionsParProfil: { profil: Profil; nombre: number }[];
+  propositionsParPole: { pole: string; nombre: number }[];
+  nonLues: number;
+};
+
 declare global {
   interface Window {
     /** Contenu injecté dans la page par le serveur (absent en développement). */

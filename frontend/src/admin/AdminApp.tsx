@@ -1,5 +1,5 @@
 import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
-import { ArrowSquareOut, Envelope, SignOut, SquaresFour, TextAa, type Icon } from '@phosphor-icons/react';
+import { ArrowSquareOut, ChartLineUp, Envelope, SignOut, SquaresFour, TextAa, type Icon } from '@phosphor-icons/react';
 import { asset } from '../lib/liens';
 import { SessionProvider, useSession } from './session';
 import { Connexion } from './pages/Connexion';
@@ -7,6 +7,7 @@ import { Propositions } from './pages/Propositions';
 import { Contenus } from './pages/Contenus';
 import { ListePoles } from './pages/ListePoles';
 import { EditionPole } from './pages/EditionPole';
+import { Statistiques } from './pages/Statistiques';
 
 /** Panel d'administration (/admin/...). */
 export default function AdminApp() {
@@ -24,18 +25,20 @@ function Garde() {
   return (
     <Disposition>
       <Routes>
-        <Route index element={<Navigate to="/admin/propositions" replace />} />
+        <Route index element={<Navigate to="/admin/tableau-de-bord" replace />} />
+        <Route path="tableau-de-bord" element={<Statistiques />} />
         <Route path="propositions" element={<Propositions />} />
         <Route path="contenus" element={<Contenus />} />
         <Route path="poles" element={<ListePoles />} />
         <Route path="poles/:id" element={<EditionPole />} />
-        <Route path="*" element={<Navigate to="/admin/propositions" replace />} />
+        <Route path="*" element={<Navigate to="/admin/tableau-de-bord" replace />} />
       </Routes>
     </Disposition>
   );
 }
 
 const RUBRIQUES: { chemin: string; libelle: string; Icone: Icon }[] = [
+  { chemin: '/admin/tableau-de-bord', libelle: 'Tableau de bord', Icone: ChartLineUp },
   { chemin: '/admin/propositions', libelle: 'Propositions', Icone: Envelope },
   { chemin: '/admin/contenus', libelle: 'Textes et coordonnées', Icone: TextAa },
   { chemin: '/admin/poles', libelle: 'Pôles', Icone: SquaresFour },
